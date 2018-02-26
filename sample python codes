@@ -1,0 +1,13 @@
+Create a User 
+import boto3
+
+Create a IAM client
+
+iam = boto3.client('iam')
+create a user
+response =iam.create_user(username='user_test01)
+ print response
+ 
+ 
+
+
