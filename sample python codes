@@ -17,3 +17,105 @@ response =iam.create_user(username='user_test01)
  
 
 
+Simple Python Script to Start and Stop Amazon AWS Instances
+
+Link:- https://www.lisenet.com/2014/simple-python-script-to-start-and-stop-amazon-aws-instances/
+
+Installation
+
+{ # apt-get update && apt-get install python-boto }
+
+For the script to work, you will also need to know the following:
+
+AWS access key and secret key.
+The region your instance is running in.
+The instance ID.
+
+Usage
+
+Script takes a single parameter passed on a CLI, either “start” or “stop”, depending on the action needed:
+
+{ $ /usr/bin/python aws.py start }
+Starting the instance...
+
+{$ /usr/bin/python aws.py stop }
+Stopping the instance...
+
+In case you enter something else:
+
+{ $ /usr/bin/python aws.py sometext}
+Usage: python aws.py {start|stop}
+
+Python Script
+
+The script file is referenced as aws.py.
+( 
+# /usr/bin/python2.7
+# written by Tomas (www.lisenet.com) on 05/11/2012
+# copyleft free software
+
+import boto.ec2
+import sys
+
+# specify AWS keys
+auth = {"aws_access_key_id": "<key_id>", "aws_secret_access_key": "<access_key>"}
+
+def main():
+    # read arguments from the command line and 
+    # check whether at least two elements were entered
+    if len(sys.argv) < 2:
+	print "Usage: python aws.py {start|stop}\n"
+	sys.exit(0)
+    else:
+	action = sys.argv[1] 
+
+    if action == "start":
+	startInstance()
+    elif action == "stop":
+    	stopInstance()
+    else:
+    	print "Usage: python aws.py {start|stop}\n"
+
+def startInstance():
+    print "Starting the instance..."
+
+    # change "eu-west-1" region if different
+    try:
+        ec2 = boto.ec2.connect_to_region("eu-west-1", **auth)
+
+    except Exception, e1:
+        error1 = "Error1: %s" % str(e1)
+        print(error1)
+        sys.exit(0)
+
+    # change instance ID appropriately  
+    try:
+         ec2.start_instances(instance_ids="i-12345678")
+
+    except Exception, e2:
+        error2 = "Error2: %s" % str(e2)
+        print(error2)
+        sys.exit(0)
+
+def stopInstance():
+    print "Stopping the instance..."
+
+    try:
+        ec2 = boto.ec2.connect_to_region("eu-west-1", **auth)
+
+    except Exception, e1:
+        error1 = "Error1: %s" % str(e1)
+        print(error1)
+        sys.exit(0)
+
+    try:
+         ec2.stop_instances(instance_ids="i-12345678")
+
+    except Exception, e2:
+        error2 = "Error2: %s" % str(e2)
+        print(error2)
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()
+	) 
